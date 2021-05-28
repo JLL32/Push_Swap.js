@@ -5,8 +5,8 @@ const Node = {
 };
 
 const Stack = {
-	head: null,
-	tail: null,
+	bottom: null,
+	top: null,
 	length: 0,
 }
 
@@ -20,8 +20,8 @@ const newNode = function(val) {
 
 const newStack = function([...data]) {
 	const stack = Object.create(Stack);
-	stack.head = null;
-	stack.tail = null;
+	stack.bottom = null;
+	stack.top = null;
 	stack.length = 0;
 	initStack(stack, data);
 	return stack;
@@ -34,13 +34,13 @@ const initStack = (stack, [...data]) => {
 const append = function(stack, value) {
 	const node = newNode(value);
 
-	if (stack.head == null) {
-		stack.head = node;
-		stack.tail = stack.head;
+	if (stack.bottom == null) {
+		stack.bottom = node;
+		stack.top = stack.bottom;
 	} else {
-		node.prev = stack.tail;
-		stack.tail.next = node;
-		stack.tail = node;
+		node.prev = stack.top;
+		stack.top.next = node;
+		stack.top = node;
 	}
 
 	stack.length++;
@@ -48,31 +48,37 @@ const append = function(stack, value) {
 
 const prepend = function(stack, value) {
 	const node = newNode(value);
-	node.next = stack.head;
-	stack.head.previous = node;
-	stack.head = node;
+	node.next = stack.bottom;
+	stack.bottom.previous = node;
+	stack.bottom = node;
 	stack.length++;
 }
 
 const pop = function(stack) {
-	const val = stack.tail.value;
-	const newTail = stack.tail.prev;
-	newTail.next = null;
-	stack.tail = newTail;
+	const val = stack.top.value;
+	const newtop = stack.top.prev;
+	newtop.next = null;
+	stack.top = newtop;
 	stack.length--;
 	return val;
 }
 
 const swap = function(stack) {
 	if (stack.length > 1) {
-		const tmp = stack.tail.value
-		stack.tail.value = stack.tail.prev.value
-		stack.tail.prev.value = tmp;	
+		const tmp = stack.top.value
+		stack.top.value = stack.top.prev.value
+		stack.top.prev.value = tmp;	
+	}
+}
+
+const rotate = function(stack) {
+	if (stack.length > 1) {
+		prepend(stack, pop(stack));
 	}
 }
 
 const myStack = newStack([1, 2, 3, 4, 5, 6, 7, 8]);
 
-console.log(myStack.tail);
+console.log(myStack.top);
 swap(myStack);
-console.log(myStack.tail);
+console.log(myStack.top);
