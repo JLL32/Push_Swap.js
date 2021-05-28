@@ -76,9 +76,23 @@ const rotate = function(stack) {
 		prepend(stack, pop(stack));
 	}
 }
+const toArray = function(stack) {
+	let nodeArray = [];
+	let currentNode = stack.bottom;
+	while (currentNode) {
+		nodeArray.push(currentNode.value);
+		if (currentNode.next) {
+			currentNode = currentNode.next;
+		} else {
+			break;
+		}
+	}
+	return nodeArray;
+}
 
 const myStack = newStack([1, 2, 3, 4, 5, 6, 7, 8]);
 
-console.log(myStack.top);
+console.log(toArray(myStack));
 swap(myStack);
-console.log(myStack.top);
+console.log(toArray(myStack));
+
