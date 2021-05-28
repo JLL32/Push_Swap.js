@@ -46,7 +46,33 @@ const append = function(stack, value) {
 	stack.length++;
 }
 
+const prepend = function(stack, value) {
+	const node = newNode(value);
+	node.next = stack.head;
+	stack.head.previous = node;
+	stack.head = node;
+	stack.length++;
+}
+
+const pop = function(stack) {
+	const val = stack.tail.value;
+	const newTail = stack.tail.prev;
+	newTail.next = null;
+	stack.tail = newTail;
+	stack.length--;
+	return val;
+}
+
+const swap = function(stack) {
+	if (stack.length > 1) {
+		const tmp = stack.tail.value
+		stack.tail.value = stack.tail.prev.value
+		stack.tail.prev.value = tmp;	
+	}
+}
+
 const myStack = newStack([1, 2, 3, 4, 5, 6, 7, 8]);
 
-console.log(myStack.head.next.prev)
-
+console.log(myStack.tail);
+swap(myStack);
+console.log(myStack.tail);
