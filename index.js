@@ -106,9 +106,32 @@ const toArray = function(stack) {
 	return nodeArray;
 }
 
-const myStack = newStack([1, 2, 3]);
+const myStack = newStack([3, 2, 1]);
 
-console.log(toArray(myStack));
+const printStack = function(stack) {
+	console.log("----------");
+	console.log(toArray(stack).map(c => c.toString()).reverse().join('\n'))
+}
+
+function ss(stackA, stackB) {
+	swap(stackA);
+	swap(stackB);
+}
+
+function rr(stackA, stackB) {
+	rotate(stackA);
+	rotate(stackB);
+}
+
+function rrr(stackA, stackB) {
+	r_rotate(stackA);
+	r_rotate(stackB);
+}
+
+printStack(myStack);
 r_rotate(myStack);
-console.log(toArray(myStack));
+printStack(myStack);
 
+printStack(myStack);
+rotate(myStack);
+printStack(myStack);
