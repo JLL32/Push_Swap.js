@@ -92,6 +92,10 @@ const r_rotate = function(stack) {
 	}
 }
 
+const send = function(stackA, stackB) {
+	append(stackB, pop(stackA));
+}
+
 const toArray = function(stack) {
 	let nodeArray = [];
 	let currentNode = stack.bottom;
@@ -105,8 +109,6 @@ const toArray = function(stack) {
 	}
 	return nodeArray;
 }
-
-const myStack = newStack([3, 2, 1]);
 
 const printStack = function(stack) {
 	console.log("----------");
@@ -128,10 +130,16 @@ function rrr(stackA, stackB) {
 	r_rotate(stackB);
 }
 
-printStack(myStack);
-r_rotate(myStack);
-printStack(myStack);
+/*TESTS*/
+const stackA = newStack([3, 2, 1]);
+const stackB = newStack([10, 9, 8]);
 
-printStack(myStack);
-rotate(myStack);
-printStack(myStack);
+printStack(stackA);
+printStack(stackB);
+send(stackA, stackB);
+printStack(stackA);
+printStack(stackB);
+
+
+
+
