@@ -56,9 +56,9 @@ const prepend = function(stack, value) {
 
 const pop = function(stack) {
 	const val = stack.top.value;
-	const newtop = stack.top.prev;
-	newtop.next = null;
-	stack.top = newtop;
+	const temp = stack.top;
+	stack.top = temp.prev;
+	stack.top.next = null;
 	stack.length--;
 	return val;
 }
@@ -82,6 +82,7 @@ const removeFirst = function(stack) {
 		const tmp = stack.bottom.next;
 		tmp.prev = null;
 		stack.bottom = tmp;
+		stack.length--;
 	}
 }
 
@@ -131,15 +132,28 @@ function rrr(stackA, stackB) {
 }
 
 /*TESTS*/
-const stackA = newStack([3, 2, 1]);
-const stackB = newStack([10, 9, 8]);
-
+const stackA = newStack([3,55]);
+const stackB = newStack([]);
 printStack(stackA);
-printStack(stackB);
-send(stackA, stackB);
-printStack(stackA);
-printStack(stackB);
+rotate(stackA)
 
+
+// if (stackA.length <= 3) {
+// 	if (stackA.top.value > stackA.top.prev.value) {
+// 		console.log("ra");
+// 		rotate(stackA);
+// 	}
+// 	if (stackA.top.prev.value > stackA.bottom.value) {
+// 		console.log("rra");
+// 		r_rotate(stackA);
+// 	}
+// 	if (stackA.top.value > stackA.top.prev.value) {
+// 		console.log("sa");
+// 		swap(stackA);
+// 	}
+// }
+console.log(stackA)
+printStack(stackA);
 
 
 
