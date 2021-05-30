@@ -49,7 +49,7 @@ const append = function(stack, value) {
 const prepend = function(stack, value) {
 	const node = newNode(value);
 	node.next = stack.bottom;
-	stack.bottom.previous = node;
+	stack.bottom.prev = node;
 	stack.bottom = node;
 	stack.length++;
 }
@@ -113,7 +113,9 @@ const toArray = function(stack) {
 
 const printStack = function(stack) {
 	console.log("----------");
+	console.log("top");
 	console.log(toArray(stack).map(c => c.toString()).reverse().join('\n'))
+	console.log("bottom");
 }
 
 function ss(stackA, stackB) {
@@ -134,26 +136,21 @@ function rrr(stackA, stackB) {
 /*TESTS*/
 const stackA = newStack([3,55]);
 const stackB = newStack([]);
-printStack(stackA);
-rotate(stackA)
 
-
-// if (stackA.length <= 3) {
-// 	if (stackA.top.value > stackA.top.prev.value) {
-// 		console.log("ra");
-// 		rotate(stackA);
-// 	}
-// 	if (stackA.top.prev.value > stackA.bottom.value) {
-// 		console.log("rra");
-// 		r_rotate(stackA);
-// 	}
-// 	if (stackA.top.value > stackA.top.prev.value) {
-// 		console.log("sa");
-// 		swap(stackA);
-// 	}
-// }
-console.log(stackA)
-printStack(stackA);
-
+if (stackA.length <= 3) {
+	if (stackA.top.value > stackA.top.prev.value) {
+		console.log("ra");
+		rotate(stackA);
+	}
+	if (stackA.top.prev.value > stackA.bottom.value) {
+		console.log("rra");
+		r_rotate(stackA);
+	}
+	if (stackA.top.value > stackA.top.prev.value) {
+		console.log("sa");
+		swap(stackA);
+	}
+}
+printStack(stackA)
 
 
