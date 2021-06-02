@@ -8,6 +8,7 @@ const Stack = {
   bottom: null,
   top: null,
   length: 0,
+  label: '',
 };
 
 const newNode = function (val) {
@@ -19,11 +20,12 @@ const newNode = function (val) {
 };
 
 
-const newStack = function ([...data]) {
+const newStack = function (label, [...data]) {
   const stack = Object.create(Stack);
   stack.bottom = null;
   stack.top = null;
   stack.length = 0;
+  stack.label = label;
   initStack(stack, data);
   return stack;
 };
@@ -73,6 +75,7 @@ const pop = function (stack) {
 };
 
 const swap = function (stack) {
+	console.log("s" + stack.label);
   if (stack.length > 1) {
     const tmp = stack.top.value;
     stack.top.value = stack.top.prev.value;
@@ -81,6 +84,7 @@ const swap = function (stack) {
 };
 
 const rotate = function (stack) {
+	console.log("r" + stack.label);
   if (stack.length > 1) {
     prepend(stack, pop(stack));
   }
@@ -96,14 +100,16 @@ const removeFirst = function (stack) {
 };
 
 const r_rotate = function (stack) {
+	console.log("rr" + stack.label);
   if (stack.length > 1) {
     append(stack, stack.bottom.value);
     removeFirst(stack);
   }
 };
 
-const send = function (stackA, stackB) {
-  append(stackB, pop(stackA));
+const send = function (stackSrc, stackDst) {
+	console.log("p" + stackDst.label)
+  append(stackDst, pop(stackSrc));
 };
 
 const toArray = function (stack) {
@@ -161,21 +167,17 @@ const bottomOffset = (index) => {
 
 const pushTopOffset = (stackSrc, stackDst, value) => {
   while (stackSrc.top.value != value) {
-    console.log("ra", value);
     rotate(stackSrc);
   }
   send(stackSrc, stackDst);
-  // console.log("ra");
 };
 
 const pushBottomOffset = (stackSrc, stackDst, value) => {
   while (stackSrc.top.value != value) {
-    console.log("rra", value);
     r_rotate(stackSrc);
   }
 
   send(stackSrc, stackDst);
-  // console.log("rra");
 };
 
 
@@ -205,7 +207,7 @@ const sendAll = (stackSrc, stackDst) => {
 }
 
 const pushChunk = (stackA, stackB, chunk) => {
-  console.log("chunk:", chunk);
+  // console.log("chunk:", chunk);
   let length = chunk.length;
   while (length--) {
     let lengthA = stackA.length;
@@ -233,19 +235,51 @@ const pushChunk = (stackA, stackB, chunk) => {
   }
 };
 
+const pushChunks = function(sortedArr, stackSrc, stackDst) {
+	let chunk = 40;
+	let n_slices = Math.ceil(sortedArr.length / chunk);
+	let start = 0;
+	let end = chunk;
+	if (sortedArr.length > chunk)
+	{
+		while(n_slices) {
+			const slice = sortedArr.slice(start, end);
+			pushChunk(stackSrc, stackDst, slice);
+			start = end;
+			end += chunk;
+			n_slices--;
+		}
+	} else {
+			pushChunk(stackSrc, stackDst, sortedArr);
+	}
+}
+
 /*TESTS*/
-const stackA = newStack([49, 3, 4, 7, 2, 60, 32, 12, 1, 9]);
-const stackB = newStack([]);
+// const input = [187, 588, 151, 890, 318, 645, 324, 320, 849, 741, 268, 835, 471, 213, 437, 244, 166, 35, 938, 488, 384, 739, 291, 534, 287, 561, 943, 789, 11, 817, 81, 272, 743, 879, 131, 487, 428, 411, 216, 983, 73, 122, 895, 317, 28, 162, 940, 590, 928, 323, 725, 632, 54, 276, 55, 896, 559, 423, 934, 549, 586, 949, 937, 328, 770, 818, 446, 999, 782, 598, 115, 664, 891, 697, 108, 884, 59, 554, 764, 403, 573, 692, 322, 290, 365, 426, 990, 338, 630, 45, 195, 842, 929, 761, 370, 8, 568, 152, 99, 781];
+// const input = [23, 1, 134, 324];
+const input = [ 89, 61, 40, 5, 92, 54, 36, 45, 57, 69, 100, 59, 88, 28, 91, 25, 37, 81, 30, 62, 60, 95, 84, 43, 22, 34, 97, 47, 3, 70, 17, 98, 85, 68, 20, 86, 16, 27, 53, 96, 83, 4, 14, 93, 41, 18, 65, 10, 24, 77, 42, 35
+]
+const stackA = newStack('a', input);
+const stackB = newStack('b', []);
 
 const arr = toArray(stackA).sort((a, b) => a - b);
 
+// console.log("stackA:", toArray(stackA));
+// console.log("sorted stackA:", arr);
+pushChunks(arr, stackA, stackB);
 console.log("stackA:", toArray(stackA));
-console.log("sorted stackA:", arr);
-pushChunk(stackA, stackB, arr.slice(0, 5));
-console.log("stackB:", toArray(stackB));
-pushChunk(stackA, stackB, arr.slice(5, 10));
 console.log("stackB:", toArray(stackB));
 
 sendAll(stackB, stackA);
 
 console.log("A after sorting", toArray(stackA))
+
+module.exports = {
+  rotate,
+  r_rotate,
+  swap,
+  send,
+  newStack,
+  toArray,
+  input
+}
