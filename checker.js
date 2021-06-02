@@ -11,9 +11,9 @@ var rl = readline.createInterface({
 // console.log(process.argv);
 const data = ops.input;
 let stackA = ops.newStack("a", data);
-console.log(ops.toArray(stackA));
+//console.log(ops.toArray(stackA));
 let sorted = data.sort((a, b) => b - a);
-console.log(sorted);
+//console.log(sorted);
 let stackB = ops.newStack("b", []);
 
 // ops.send(stackA, stackB);
