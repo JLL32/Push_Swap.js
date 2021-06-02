@@ -18,6 +18,7 @@ const newNode = function (val) {
   return node;
 };
 
+
 const newStack = function ([...data]) {
   const stack = Object.create(Stack);
   stack.bottom = null;
@@ -55,6 +56,14 @@ const prepend = function (stack, value) {
 };
 
 const pop = function (stack) {
+
+  if (stack.length == 1) {
+    let val = stack.bottom.value
+    stack.length = 0;
+    stack.bottom = null
+    stack.top = null
+    return val
+  }
   const val = stack.top.value;
   const temp = stack.top;
   stack.top = temp.prev;
@@ -138,7 +147,7 @@ function rrr(stackA, stackB) {
   r_rotate(stackB);
 }
 
-const find = (stack, index) => {
+const getIndexValue = (stack, index) => {
   return [index, toArray(stack)[index]];
 };
 
@@ -150,58 +159,67 @@ const bottomOffset = (index) => {
   return index;
 };
 
-const pushTopOffset = (stackA, stackB, value) => {
-	while (stackA.top.value != value) {
-	  console.log("ra", value);
-    rotate(stackA);
+const pushTopOffset = (stackSrc, stackDst, value) => {
+  while (stackSrc.top.value != value) {
+    console.log("ra", value);
+    rotate(stackSrc);
   }
-  send(stackA, stackB);
+  send(stackSrc, stackDst);
   // console.log("ra");
 };
 
-const pushBottomOffset = (stackA, stackB, value) => {
-	while (stackA.top.value != value) {
-	  console.log("rra", value);
-    r_rotate(stackA);
-	}
+const pushBottomOffset = (stackSrc, stackDst, value) => {
+  while (stackSrc.top.value != value) {
+    console.log("rra", value);
+    r_rotate(stackSrc);
+  }
 
-  send(stackA, stackB);
+  send(stackSrc, stackDst);
   // console.log("rra");
 };
 
-const getBiggest = (stackA, stackB, length) => {
-	let biggest;
-	let stackLength = stackA.length;
-	while (length--) {
-		let tmp = find(stackA, length);
-		if (tmp > biggest)
-			biggest = tmp;
-	}
-	let offset = stackLength - length;
-	if (length == 2) {
-		swap(stack)
-		send(stackA, stackB)
-	} else {
-		while ()
-	}
+
+const sendBiggest = (stackSrc, stackDst) => {
+  let biggest = Number.MIN_SAFE_INTEGER;
+  let currentNode = stackSrc.bottom;
+  let index = 0;
+  while (currentNode) {
+    let temp = currentNode.value;
+    if (temp > biggest)
+    {
+      biggest = temp;
+      index++;
+    }
+    currentNode = currentNode.next;
+  }
+  if (index >= stackSrc.length / 2) {
+    pushTopOffset(stackSrc, stackDst, biggest);
+  } else
+    pushBottomOffset(stackSrc, stackDst, biggest);
+}
+
+const sendAll = (stackSrc, stackDst) => {
+  while (stackSrc.length) {
+    sendBiggest(stackSrc, stackDst)
+  }
 }
 
 const pushChunk = (stackA, stackB, chunk) => {
   console.log("chunk:", chunk);
   let length = chunk.length;
-	while (length--) {
+  while (length--) {
     let lengthA = stackA.length;
     let holdTop;
     let holdBottom;
     while (lengthA--) {
-      holdTop = find(stackA, lengthA);
+      holdTop = getIndexValue(stackA, lengthA);
       if (chunk.includes(holdTop[1])) {
         break;
       }
     }
     let i = 0;
     while (i < stackA.length) {
-      holdBottom = find(stackA, i);
+      holdBottom = getIndexValue(stackA, i);
       if (chunk.includes(holdBottom[1])) {
         break;
       }
@@ -214,15 +232,20 @@ const pushChunk = (stackA, stackB, chunk) => {
     }
   }
 };
+
 /*TESTS*/
-const stackA = newStack([49, 3, 4, 7, 2, 60, 32, 12, 1, 9, 10]);
+const stackA = newStack([49, 3, 4, 7, 2, 60, 32, 12, 1, 9]);
 const stackB = newStack([]);
 
 const arr = toArray(stackA).sort((a, b) => a - b);
 
 console.log("stackA:", toArray(stackA));
 console.log("sorted stackA:", arr);
-pushChunk(stackA, stackB, arr.slice(0, 4));
+pushChunk(stackA, stackB, arr.slice(0, 5));
 console.log("stackB:", toArray(stackB));
-pushChunk(stackA, stackB, arr.slice(4, 8));
+pushChunk(stackA, stackB, arr.slice(5, 10));
 console.log("stackB:", toArray(stackB));
+
+sendAll(stackB, stackA);
+
+console.log("A after sorting", toArray(stackA))
