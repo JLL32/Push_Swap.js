@@ -1,5 +1,6 @@
 const readline = require("readline");
-const ops = require("./index");
+const ops = require("./stack");
+const data = require("./data");
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -7,12 +8,12 @@ var rl = readline.createInterface({
     terminal: false,
 });
 
-// let data = process.argv.slice(2,).map((str) => Number(str));
+let data = process.argv.slice(2).map((str) => Number(str));
 // console.log(process.argv);
-const data = ops.input;
-let stackA = ops.newStack("a", data);
+const input = data.input;
+let stackA = ops.newStack("a", input);
 //console.log(ops.toArray(stackA));
-let sorted = data.sort((a, b) => b - a);
+let sorted = input.sort((a, b) => b - a);
 //console.log(sorted);
 let stackB = ops.newStack("b", []);
 
