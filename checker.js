@@ -8,9 +8,11 @@ var rl = readline.createInterface({
     terminal: false,
 });
 
-let data = process.argv.slice(2).map((str) => Number(str));
+// let input = process.argv[2].split(' ').map((str) => Number(str))
+// let input = process.argv.slice(2).map(s => Number(s));
+let input = data.input;
 // console.log(process.argv);
-const input = data.input;
+// const input = data.input;
 let stackA = ops.newStack("a", input);
 //console.log(ops.toArray(stackA));
 let sorted = input.sort((a, b) => b - a);
