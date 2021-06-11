@@ -37,7 +37,7 @@ const sendBiggest = (stackSrc, stackDst) => {
         index++;
         currentNode = currentNode.next;
     }
-    if (biggestNIndex > stackSrc.length / 2 - 1) {
+    if (biggestNIndex >= (stackSrc.length / 2 - 1)) {
         pushTopOffset(stackSrc, stackDst, biggest);
     } else {
         pushBottomOffset(stackSrc, stackDst, biggest);
